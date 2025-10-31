@@ -122,24 +122,27 @@
       display: none !important;
     }
 
-    /* Hover label default */
-    .hover-label {
-      font-size: 14px !important;
-    }
-
     /* Responsif untuk smartphone */
     @media (max-width: 767px) {
+      #logo {
+        width: 300px;
+      }
+
+      #title {
+        font-size: 32px;
+      }
+
+      #credit {
+        font-size: 18px;
+      }
+
       #explore-btn {
-        font-size: 24px;
+        font-size: 22px;
         padding: 10px 24px;
       }
 
       #description-content {
         font-size: 14px;
-      }
-
-      .hover-label {
-        font-size: 12px !important;
       }
     }
   </style>
@@ -165,6 +168,7 @@
 
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 
   <script>
     const sdaData = [
@@ -3763,7 +3767,7 @@ Sumber Data
 
     ];
 
-    const iconBaseUrl = "https://raw.githubusercontent.com/muhafwanmaulana24-oss/Peta/main/";
+        const iconBaseUrl = "https://raw.githubusercontent.com/muhafwanmaulana24-oss/Peta/main/";
     let map;
     let layerControl;
 
@@ -3804,23 +3808,33 @@ Sumber Data
 
       layerControl = L.control.layers(baseMaps, null, { position: 'topright' }).addTo(map);
 
+      // Tentukan ukuran ikon berdasarkan perangkat
+      const isMobile = window.innerWidth <= 767;
+      const iconSize = isMobile ? [32, 30] : [48, 46];
+      const iconAnchor = isMobile ? [16, 30] : [24, 42];
+
       // Create markers
       sdaData.forEach(item => {
         const customIcon = L.icon({
           iconUrl: iconBaseUrl + item.icon,
-          iconSize: [32, 32],
-          iconAnchor: [16, 32]
+          iconSize: iconSize,
+          iconAnchor: iconAnchor
         });
 
         const marker = L.marker([item.lat, item.lng], { icon: customIcon }).addTo(map);
 
-        // Hover label
+        // Hover label (responsif)
         let hoverPopup = null;
         marker.on('mouseover', () => {
           if (!hoverPopup) {
-            hoverPopup = L.popup({ closeButton: false, className: 'hover-label' })
+            const labelSize = isMobile ? '12px' : '14px';
+            hoverPopup = L.popup({
+              closeButton: false,
+              className: 'hover-label',
+              autoClose: false
+            })
               .setLatLng(marker.getLatLng())
-              .setContent(`${item.name} – ${item.kab}`)
+              .setContent(`<div style="font-size:${labelSize}; font-weight:bold;">${item.name} – ${item.kab}</div>`)
               .openOn(map);
           }
         });
