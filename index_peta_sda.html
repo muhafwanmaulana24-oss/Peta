@@ -122,27 +122,24 @@
       display: none !important;
     }
 
+    /* Hover label default */
+    .hover-label {
+      font-size: 14px !important;
+    }
+
     /* Responsif untuk smartphone */
     @media (max-width: 767px) {
-      #logo {
-        width: 300px;
-      }
-
-      #title {
-        font-size: 32px;
-      }
-
-      #credit {
-        font-size: 18px;
-      }
-
       #explore-btn {
-        font-size: 22px;
+        font-size: 24px;
         padding: 10px 24px;
       }
 
       #description-content {
         font-size: 14px;
+      }
+
+      .hover-label {
+        font-size: 12px !important;
       }
     }
   </style>
@@ -151,7 +148,7 @@
 
   <!-- Splash Screen -->
   <div id="splash">
-    <img id="logo" src="https://raw.githubusercontent.com/muhafwanmaulana24-oss/Peta/main/Logo2.png" alt="Logo" />
+    <img id="logo" src="https://raw.githubusercontent.com/muhafwanmaulana24-oss/Peta/main/Logo3.png" alt="Logo2" />
     <div id="title">Peta Persebaran Sumber Daya Alam Kalimantan Timur</div>
     <div id="credit">Dibuat oleh Muhammad Afwan Maulana, S. Pd., Gr.</div>
     <button id="explore-btn">Jelajahi</button>
@@ -168,7 +165,6 @@
 
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 
   <script>
     const sdaData = [
@@ -3767,7 +3763,7 @@ Sumber Data
 
     ];
 
-        const iconBaseUrl = "https://raw.githubusercontent.com/muhafwanmaulana24-oss/Peta/main/";
+    const iconBaseUrl = "https://raw.githubusercontent.com/muhafwanmaulana24-oss/Peta/main/";
     let map;
     let layerControl;
 
@@ -3808,33 +3804,23 @@ Sumber Data
 
       layerControl = L.control.layers(baseMaps, null, { position: 'topright' }).addTo(map);
 
-      // Tentukan ukuran ikon berdasarkan perangkat
-      const isMobile = window.innerWidth <= 767;
-      const iconSize = isMobile ? [32, 30] : [48, 46];
-      const iconAnchor = isMobile ? [16, 30] : [24, 42];
-
       // Create markers
       sdaData.forEach(item => {
         const customIcon = L.icon({
           iconUrl: iconBaseUrl + item.icon,
-          iconSize: iconSize,
-          iconAnchor: iconAnchor
+          iconSize: [48, 46],
+          iconAnchor: [36, 32]
         });
 
         const marker = L.marker([item.lat, item.lng], { icon: customIcon }).addTo(map);
 
-        // Hover label (responsif)
+        // Hover label
         let hoverPopup = null;
         marker.on('mouseover', () => {
           if (!hoverPopup) {
-            const labelSize = isMobile ? '12px' : '14px';
-            hoverPopup = L.popup({
-              closeButton: false,
-              className: 'hover-label',
-              autoClose: false
-            })
+            hoverPopup = L.popup({ closeButton: false, className: 'hover-label' })
               .setLatLng(marker.getLatLng())
-              .setContent(`<div style="font-size:${labelSize}; font-weight:bold;">${item.name} – ${item.kab}</div>`)
+              .setContent(`${item.name} – ${item.kab}`)
               .openOn(map);
           }
         });
